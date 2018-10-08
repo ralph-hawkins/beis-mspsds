@@ -1,0 +1,3 @@
+parent=base
+import=common/keycloak
+mspsds_site=https://mspsds-staging.cloudapps.digital/investigations
