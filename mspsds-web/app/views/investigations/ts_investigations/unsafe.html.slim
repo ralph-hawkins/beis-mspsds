@@ -1,0 +1,31 @@
+- content_for :page_title, "Why is the product unsafe"
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    h1.govuk-heading-xl
+      span.govuk-caption-xl Report an unsafe or non-compliant product
+      | Why is the product unsafe?
+    span.govuk-hint
+      | Add as many hazards as necessary
+= form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+  .govuk-grid-row class="govuk-!-margin-bottom-3"
+    .mspsds-input.govuk-grid-column-two-thirds class="govuk-!-margin-bottom-9"
+      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
+        .govuk-grid-row#hazard-type-auto-group-complete-container
+          .mspsds-autocomplete#hazard-type-auto-complete-container
+            .govuk-grid-column-two-thirds
+              = form.label :hazard_type, "Hazard type", class: "govuk-label", for: "hazard-type-autocomplete"
+              span#hazard-type-category-picker.govuk-hint What kind of danger does the product present?
+            .govuk-grid-column-one-half
+              = form.select :hazard_type, hazard_types, {include_blank: true},
+                      class: "govuk-select", id: "hazard-type-picker", aria_describedby: "hazard-type-category-hint"
+            .govuk-grid-column-one-half
+              a.govuk-link.add-hazard-link Add hazard
+
+      .govuk-form-group
+        .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_description].any?)]
+          = form.label :hazard_description, "Hazard details", class: "govuk-label",
+                  for: ":investigation_hazard_description"
+          span.govuk-hint id="allegation-hazard–detail-hint"
+            | Including any incidents or events that brought it to your attention
+            = form.text_area :hazard_description, class: "govuk-textarea", id: "allegation-hazard–detail",
+                  "aria-describedby": "allegation-hazard–detail-hint", rows: 5

@@ -9,7 +9,7 @@ class Investigations::TsInvestigationsController < ApplicationController
   set_attachment_names :file
   set_file_params_key :file
 
-  steps :product, :why_reporting, :which_businesses, :business, :has_corrective_action, :corrective_action,
+  steps :product, :why_reporting, :unsafe, :non_conformmant, :which_businesses, :business, :has_corrective_action, :corrective_action,
         :other_information, :test_results, :risk_assessments, :product_images, :evidence_images, :other_files,
         :reference_number
   before_action :set_countries, only: %i[show create update]
@@ -376,7 +376,9 @@ private
       @product.validate
     when :why_reporting
       @investigation.errors.add(:base, "Please indicate whether the product is unsafe or non-compliant") if !product_unsafe && !product_non_compliant
+    when :unsafe
       @investigation.validate :unsafe if product_unsafe
+    when :non_compliant
       @investigation.validate :non_compliant if product_non_compliant
     when :which_businesses
       validate_none_as_only_selection
