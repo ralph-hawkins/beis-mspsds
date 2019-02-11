@@ -8,3 +8,13 @@
     @include govuk-responsive-padding(2);
   }
 }
+
+.add-hazard-link {
+  color: govuk-colour("blue");
+  text-decoration: underline;
+}
+
+.delete-hazard-link {
+  color: govuk-colour("red");
+  text-decoration: underline;
+}
