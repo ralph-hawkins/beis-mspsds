@@ -33,3 +33,7 @@
             | Including any incidents or events that brought it to your attention
             = form.text_area :hazard_description, class: "govuk-textarea", id: "allegation-hazard–detail",
                   "aria-describedby": "allegation-hazard–detail-hint", rows: 5
+
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      = form.submit "Continue", class: "govuk-button"

@@ -9,7 +9,7 @@ class Investigations::TsInvestigationsController < ApplicationController
   set_attachment_names :file
   set_file_params_key :file
 
-  steps :product, :why_reporting, :unsafe, :non_conformmant, :which_businesses, :business, :has_corrective_action, :corrective_action,
+  steps :product, :why_reporting, :unsafe, :non_compliant, :which_businesses, :business, :has_corrective_action, :corrective_action,
         :other_information, :test_results, :risk_assessments, :product_images, :evidence_images, :other_files,
         :reference_number
   before_action :set_countries, only: %i[show create update]
@@ -17,7 +17,7 @@ class Investigations::TsInvestigationsController < ApplicationController
   before_action :store_product, only: %i[update], if: -> { step == :product }
   before_action :set_investigation, only: %i[show create update]
   before_action :store_investigation, only: %i[update], if: -> { %i[why_reporting reference_number].include? step }
-  before_action :set_why_reporting, only: %i[show update], if: -> { step == :why_reporting }
+  before_action :set_why_reporting, only: %i[show update], if: -> { %i[why_reporting :unsafe :non_compliant].include? step }
   before_action :store_why_reporting, only: %i[update], if: -> { step == :why_reporting }
   before_action :set_selected_businesses, only: %i[show update], if: -> { step == :which_businesses }
   before_action :store_selected_businesses, only: %i[update], if: -> { step == :which_businesses }
@@ -50,6 +50,8 @@ class Investigations::TsInvestigationsController < ApplicationController
     case step
     when :business
       return redirect_to next_wizard_path if all_businesses_complete?
+    when :unsafe, :non_compliant
+      return redirect_to next_wizard_path unless session[step]
     when :corrective_action, *other_information_types
       return redirect_to next_wizard_path unless @repeat_step == "Yes"
     end
@@ -211,6 +213,10 @@ private
       )
     when :reference_number
       params.require(:investigation).permit(:complainant_reference)
+    when :unsafe
+      params.require(:investigation).permit(:hazard_type, :hazard_description)
+    when :non_compliant
+      params.require(:investigation).permit(:non_compliant_reason)
     end
   end
 
