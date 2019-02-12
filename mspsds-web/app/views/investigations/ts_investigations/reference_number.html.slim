@@ -4,16 +4,34 @@
   .govuk-grid-column-two-thirds
     h1.govuk-heading-xl
       span.govuk-caption-xl Reporting an unsafe product
-      | Find this in your system
+      | Add your own reference number
+
+    p.govuk-body
+      | The Product safety register assigns each case an ID.
+    p.govuk-body
+      | However, if you've recorded information about this case in your own system, you may have given it an internal reference number. You can also add that here and it will show up if you search for it.
+
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
   = render "form_validation_display", errors: @investigation.errors, model_name: "investigation"
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .govuk-grid-column-one-half
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:complainant_reference].any?)]
-        span#investigation_complainant_reference.govuk-hint
-          | Use an existing case number or reference from your system to help you find your report in the future.
-        = form.text_field :complainant_reference, class: "govuk-input",
-                "aria-describedby": "report-title-hint"
+        fieldset.govuk-fieldset
+          legend.govuk-label
+            | Do you want to add your own reference number?
+          .govuk-radios.govuk-radios--conditional data-module="radios"
+            .govuk-radios__item
+              = form.radio_button :has_reference_number, "Yes", class: "govuk-radios__input",
+                      "data-aria-controls": "conditional-corrective-action"
+              = form.label :has_reference_number, "Yes", class: "govuk-label govuk-radios__label"
+            #conditional-corrective-action.govuk-radios__conditional.govuk-radios__conditional--hidden
+              = form.label :complainant_reference, "Existing reference number", class: "govuk-label"
+              = form.text_field :complainant_reference, class: "govuk-input"
+            .govuk-radios__item
+              = form.radio_button :has_reference_number, "No", class: "govuk-radios__input",
+                      "data-aria-controls": "conditional-no-corrective-action"
+              = form.label :has_reference_number, "No", class: "govuk-label govuk-radios__label"
+
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       = form.submit "Save", class: "govuk-button"

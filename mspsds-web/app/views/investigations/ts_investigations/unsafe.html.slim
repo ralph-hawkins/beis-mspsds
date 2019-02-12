@@ -4,8 +4,6 @@
     h1.govuk-heading-xl
       span.govuk-caption-xl Report an unsafe or non-compliant product
       | Why is the product unsafe?
-    span.govuk-hint
-      | Add as many hazards as necessary
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .mspsds-input.govuk-grid-column-two-thirds
@@ -18,14 +16,14 @@
           = render "hazard_type_picker", select_id: "hazard-type-picker-5", form: form
         .govuk-grid-column
           a.mspsds-block-link.add-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
-            | Add hazard
-
+            | Add another hazard
+      / hr class=[“govuk-section-break govuk-section-break--m govuk-section-break--visible”]
       .govuk-form-group
         .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_description].any?)]
-          = form.label :hazard_description, "Hazard details", class: "govuk-label",
+          = form.label :hazard_description, "Why do you think the product is unsafe?", class: "govuk-label",
                   for: ":investigation_hazard_description"
           span.govuk-hint id="allegation-hazard–detail-hint"
-            | Including any incidents or events that brought it to your attention
+            | For example, exposed wires or incidents that brought it to your attention
             = form.text_area :hazard_description, class: "govuk-textarea", id: "allegation-hazard–detail",
                   "aria-describedby": "allegation-hazard–detail-hint", rows: 5
 
