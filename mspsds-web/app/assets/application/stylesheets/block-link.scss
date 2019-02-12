@@ -12,6 +12,7 @@
 .add-hazard-link {
   color: govuk-colour("blue");
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .delete-hazard-container {
@@ -21,4 +22,5 @@
 .delete-hazard-link {
   color: govuk-colour("red");
   text-decoration: underline;
+  cursor: pointer;
 }
