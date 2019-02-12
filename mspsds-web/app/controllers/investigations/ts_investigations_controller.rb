@@ -219,6 +219,8 @@ private
       params.require(:investigation).permit(:non_compliant_reason)
     when :previous_corrective_actions
       params.require(:investigation).permit(:previous_corrective_actions_description)
+    when :planned_corrective_actions
+      params.require(:investigation).permit(:planned_corrective_actions_description)
     end
   end
 
