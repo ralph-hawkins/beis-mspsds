@@ -150,8 +150,8 @@ ActiveRecord::Schema.define(version: 2019_02_12_122039) do
     t.boolean "is_closed", default: false
     t.boolean "is_private", default: false, null: false
     t.text "non_compliant_reason"
-    t.text "planned_corrective_actions_description"
-    t.text "previous_corrective_actions_description"
+    t.text "planned_corrective_action_description"
+    t.text "previous_corrective_action_description"
     t.string "product_category"
     t.string "type", default: "Investigation::Allegation"
     t.datetime "updated_at", null: false
