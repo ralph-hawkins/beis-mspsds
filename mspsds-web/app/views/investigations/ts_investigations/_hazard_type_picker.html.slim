@@ -1,11 +1,12 @@
-.mspsds-autocomplete#hazard-type-auto-complete-container class=[("display-none" unless local_assigns.include? :first)]
+- is_first = local_assigns.include? :first
+.mspsds-autocomplete#hazard-type-auto-complete-container class=[("display-none" unless is_first)]
   .govuk-grid-column-two-thirds
     = form.label :hazard_type, "Hazard type", class: "govuk-label", for: "hazard-type-autocomplete"
     span#hazard-type-category-picker.govuk-hint The danger the product presents
   .govuk-grid-column-one-half class="govuk-!-margin-bottom-3"
     = form.select :hazard_type, hazard_types, {include_blank: true},
             class: "govuk-select", id: select_id, aria_describedby: "hazard-type-category-hint"
-  - unless local_assigns.include? :first
+  - unless is_first
     .govuk-grid-column-one-half.delete-hazard-container
       a.govuk-link.delete-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
         | Remove hazard

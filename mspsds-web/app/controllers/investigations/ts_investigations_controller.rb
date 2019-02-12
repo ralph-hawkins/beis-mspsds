@@ -9,7 +9,7 @@ class Investigations::TsInvestigationsController < ApplicationController
   set_attachment_names :file
   set_file_params_key :file
 
-  steps :product, :why_reporting, :unsafe, :non_compliant, :which_businesses, :business, :has_corrective_action, :corrective_action,
+  steps :product, :why_reporting, :unsafe, :non_compliant, :which_businesses, :business, :previous_corrective_actions, :planned_corrective_actions,
         :other_information, :test_results, :risk_assessments, :product_images, :evidence_images, :other_files,
         :reference_number
   before_action :set_countries, only: %i[show create update]
@@ -217,6 +217,8 @@ private
       params.require(:investigation).permit(:hazard_type, :hazard_description)
     when :non_compliant
       params.require(:investigation).permit(:non_compliant_reason)
+    when :previous_corrective_actions
+      params.require(:investigation).permit(:previous_corrective_action_description)
     end
   end
 
