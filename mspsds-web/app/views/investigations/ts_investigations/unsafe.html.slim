@@ -11,16 +11,11 @@
     .mspsds-input.govuk-grid-column-two-thirds
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
         .govuk-grid-row#hazard-type-auto-complete-group-container
-          .mspsds-autocomplete#hazard-type-auto-complete-container
-            .govuk-grid-column-two-thirds
-              = form.label :hazard_type, "Hazard type", class: "govuk-label", for: "hazard-type-autocomplete"
-              span#hazard-type-category-picker.govuk-hint The danger the product presents
-            .govuk-grid-column-one-half class="govuk-!-margin-bottom-3"
-              = form.select :hazard_type, hazard_types, {include_blank: true},
-                      class: "govuk-select", id: "hazard-type-picker", aria_describedby: "hazard-type-category-hint"
-            .govuk-grid-column-one-half
-              a.govuk-link.delete-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
-                | Remove hazard
+          = render "hazard_type_picker", select_id: "hazard-type-picker", form: form, first: true
+          = render "hazard_type_picker", select_id: "hazard-type-picker-2", form: form
+          = render "hazard_type_picker", select_id: "hazard-type-picker-3", form: form
+          = render "hazard_type_picker", select_id: "hazard-type-picker-4", form: form
+          = render "hazard_type_picker", select_id: "hazard-type-picker-5", form: form
         .govuk-grid-column
           a.mspsds-block-link.add-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
             | Add hazard
