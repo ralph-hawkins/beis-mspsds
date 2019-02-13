@@ -6,6 +6,7 @@ class Investigation < ApplicationRecord
 
   attr_accessor :status_rationale
   attr_accessor :visibility_rationale
+  attr_accessor :previous_corrective_action
 
   validates :user_title, presence: true, on: :enquiry_details
   validates :description, presence: true, on: %i[allegation_details enquiry_details]
@@ -14,6 +15,7 @@ class Investigation < ApplicationRecord
   validates :hazard_description, presence: true, on: :unsafe
   validates :hazard_type, presence: true, on: :unsafe
   validates :non_compliant_reason, presence: true, on: :non_compliant
+  validates :previous_corrective_action_description, presence: true, on: :previous_corrective_action
 
   validates_length_of :user_title, maximum: 1000
 

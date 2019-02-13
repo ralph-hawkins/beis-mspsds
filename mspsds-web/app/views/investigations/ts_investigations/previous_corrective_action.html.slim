@@ -6,10 +6,11 @@
       span.govuk-caption-xl Report an unsafe or non-compliant product
       | Has any corrective action been taken?
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+  = render "form_validation_display", errors: @investigation.errors
   fieldset.govuk-fieldset
     span.govuk-hint
       | For example, you’ve asked the retailer to stop selling the product
-    .govuk-form-group class=("govuk-form-group--error" if @investigation.errors[:previous_corrective_action].any?)
+    .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
       fieldset.govuk-fieldset
         .govuk-radios.govuk-radios--conditional data-module="radios"
           .govuk-radios__item
