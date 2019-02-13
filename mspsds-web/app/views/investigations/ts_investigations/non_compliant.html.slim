@@ -6,6 +6,7 @@
       | Why is the product
       span.no-wrap  non-compliant?
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+  = render "form_validation_display", errors: @investigation.errors
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .mspsds-input.govuk-grid-column-two-thirds
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:non_compliant_reason].any?)]

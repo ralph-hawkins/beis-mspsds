@@ -394,7 +394,7 @@ private
     when :unsafe
       @investigation.validate :unsafe
     when :non_compliant
-      @investigation.validate :non_compliant if product_non_compliant
+      @investigation.validate :non_compliant
     when :which_businesses
       validate_none_as_only_selection
       @investigation.errors.add(:base, "Please indicate which if any business is known") if no_business_selected

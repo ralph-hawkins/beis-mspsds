@@ -8,7 +8,7 @@
   = render "form_validation_display", errors: @investigation.errors
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .mspsds-input.govuk-grid-column-two-thirds
-      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
+      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
         .govuk-grid-row#hazard-type-auto-complete-group-container
           = render "hazard_type_picker", select_id: "hazard-type-picker", select_key: :hazard_type, form: form, first: true
           = render "hazard_type_picker", select_id: "hazard-type-picker-2", form: form
@@ -19,14 +19,13 @@
           a.mspsds-block-link.add-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
             | Add another hazard
       / hr class=[“govuk-section-break govuk-section-break--m govuk-section-break--visible”]
-      .govuk-form-group
-        .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_description].any?)]
-          = form.label :hazard_description, "Why do you think the product is unsafe?", class: "govuk-label",
-                  for: ":investigation_hazard_description"
-          span.govuk-hint id="allegation-hazard–detail-hint"
-            | For example, exposed wires or incidents that brought it to your attention
-            = form.text_area :hazard_description, class: "govuk-textarea", id: "allegation-hazard–detail",
-                  "aria-describedby": "allegation-hazard–detail-hint", rows: 5
+      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_description].any?)]
+        = form.label :hazard_description, "Why do you think the product is unsafe?", class: "govuk-label",
+                for: ":investigation_hazard_description"
+        span.govuk-hint id="allegation-hazard–detail-hint"
+          | For example, exposed wires or incidents that brought it to your attention
+          = form.text_area :hazard_description, class: "govuk-textarea", id: "allegation-hazard–detail",
+                "aria-describedby": "allegation-hazard–detail-hint", rows: 5
 
   .govuk-grid-row
     .govuk-grid-column-two-thirds
