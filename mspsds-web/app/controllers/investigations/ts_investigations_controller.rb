@@ -11,11 +11,11 @@ class Investigations::TsInvestigationsController < ApplicationController
 
   steps :product, :why_reporting, :unsafe, :non_compliant, :which_businesses, :business, :previous_corrective_action, :planned_corrective_action,
         :other_information, :test_results, :risk_assessments, :product_images, :evidence_images, :other_files,
-        :reference_number
+        :reference_number, :confirmation
   before_action :set_countries, only: %i[show create update]
   before_action :set_product, only: %i[show create update]
   before_action :store_product, only: %i[update], if: -> { step == :product }
-  before_action :set_investigation, only: %i[show create update]
+  before_action :set_investigation, only: %i[show update]
   before_action :store_investigation, only: %i[update], if: -> { %i[why_reporting reference_number].include? step }
   before_action :set_why_reporting, only: %i[show update], if: -> { %i[why_reporting :unsafe :non_compliant].include? step }
   before_action :store_why_reporting, only: %i[update], if: -> { step == :why_reporting }
@@ -66,7 +66,7 @@ class Investigations::TsInvestigationsController < ApplicationController
 
   def create
     if records_saved?
-      redirect_to investigation_path(@investigation)
+      redirect_to next_wizard_path
     else
       render_wizard
     end
@@ -78,7 +78,7 @@ class Investigations::TsInvestigationsController < ApplicationController
       case step
       when :business, :corrective_action, *other_information_types
         return redirect_to wizard_path step
-      when steps.last
+      when :reference_number
         return create
       end
       redirect_to next_wizard_path
@@ -94,7 +94,11 @@ private
   end
 
   def set_investigation
-    @investigation = Investigation.new(investigation_step_params.except(:unsafe, :non_compliant))
+    if step == :confirmation
+      @investigation = Investigation.find_by(id: session[:investigation_id])
+    else
+      @investigation = Investigation.new(investigation_step_params.except(:unsafe, :non_compliant))
+    end
   end
 
   def set_why_reporting
@@ -183,6 +187,7 @@ private
     session.delete :file
     session[:selected_businesses] = []
     session[:businesses] = []
+    session.delete :investigation_id
   end
 
   def store_investigation
@@ -387,7 +392,7 @@ private
     when :why_reporting
       @investigation.errors.add(:base, "Please indicate whether the product is unsafe or non-compliant") if !product_unsafe && !product_non_compliant
     when :unsafe
-      @investigation.validate :unsafe if product_unsafe
+      @investigation.validate :unsafe
     when :non_compliant
       @investigation.validate :non_compliant if product_non_compliant
     when :which_businesses
@@ -423,6 +428,7 @@ private
     @product.save
     @investigation.products << @product
     @investigation.save
+    session[:investigation_id] = @investigation.id
     save_businesses
     save_corrective_actions
     save_test_results

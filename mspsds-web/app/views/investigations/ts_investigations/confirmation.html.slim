@@ -1,0 +1,28 @@
+- content_for :page_title, "Report an unsafe or non-compliant product"
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    .hmcts-banner
+      .hmcts-banner__message
+        h1.govuk-heading-l Case created
+        p.govuk-body
+          = "Case ID: #{@investigation.pretty_id}"
+        p.govuk-body
+          | A confirmation email has been sent to
+          strong
+            = " #{current_user.email}"
+    p.govuk-body
+      strong
+        = @investigation.title
+      | , has now been assigned to
+      strong
+        |  The Office for Product Safety and Standards
+    p.govuk-body If you need to, you can add more information later.
+    = link_to "View case", investigation_path(@investigation),
+            class: "govuk-button govuk-button--start", role: "button", draggable: "false"
+    p.govuk-body
+      = link_to "Home", root_path, class: "govuk-link govuk-link--no-visited-state"
+    p.govuk-body
+      = link_to "View all cases you have opened", investigations_path, class: "govuk-link govuk-link--no-visited-state"
+
+/ https://opss-product-safety-edh.herokuapp.com/pages/flows/ts-create/case-created
