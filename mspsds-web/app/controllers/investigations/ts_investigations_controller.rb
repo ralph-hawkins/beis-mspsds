@@ -225,7 +225,7 @@ private
     when :previous_corrective_action
       params.require(:investigation).permit(:previous_corrective_action, :previous_corrective_action_description)
     when :planned_corrective_action
-      params.require(:investigation).permit(:planned_corrective_action_description)
+      params.require(:investigation).permit(:planned_corrective_action, :planned_corrective_action_description)
     end
   end
 
@@ -408,6 +408,11 @@ private
         @investigation.errors.add(:base, "Please indicate whether any corrective action has been taken")
       end
       @investigation.validate :previous_corrective_action if investigation_step_params[:previous_corrective_action] == "Yes"
+    when :planned_corrective_action
+      if investigation_step_params[:planned_corrective_action].nil?
+        @investigation.errors.add(:base, "Please indicate whether any corrective action is planned")
+      end
+      @investigation.validate :planned_corrective_action if investigation_step_params[:planned_corrective_action] == "Yes"
     when :has_corrective_action
       unless params.key? :further_corrective_action
         @investigation.errors.add(:further_corrective_action,
