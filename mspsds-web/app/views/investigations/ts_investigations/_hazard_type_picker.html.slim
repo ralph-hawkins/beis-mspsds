@@ -3,7 +3,8 @@
   .govuk-grid-column-two-thirds
     = form.label :hazard_type, "Hazard type", class: "govuk-label", for: "hazard-type-autocomplete"
   .govuk-grid-column-one-half class="govuk-!-margin-bottom-3"
-    = form.select :hazard_type, hazard_types, {include_blank: true},
+    - select_key ||= :extra_hazard_type
+    = form.select select_key, hazard_types, {include_blank: true},
             class: "govuk-select", id: select_id, aria_describedby: "hazard-type-category-hint"
   - unless is_first
     .govuk-grid-column-one-half.delete-hazard-container

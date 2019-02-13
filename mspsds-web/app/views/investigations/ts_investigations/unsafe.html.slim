@@ -5,11 +5,12 @@
       span.govuk-caption-xl Report an unsafe or non-compliant product
       | Why is the product unsafe?
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+  = render "form_validation_display", errors: @investigation.errors
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .mspsds-input.govuk-grid-column-two-thirds
-      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
+      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
         .govuk-grid-row#hazard-type-auto-complete-group-container
-          = render "hazard_type_picker", select_id: "hazard-type-picker", form: form, first: true
+          = render "hazard_type_picker", select_id: "hazard-type-picker", select_key: :hazard_type, form: form, first: true
           = render "hazard_type_picker", select_id: "hazard-type-picker-2", form: form
           = render "hazard_type_picker", select_id: "hazard-type-picker-3", form: form
           = render "hazard_type_picker", select_id: "hazard-type-picker-4", form: form
