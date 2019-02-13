@@ -14,10 +14,10 @@
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
   = render "form_validation_display", errors: @investigation.errors, model_name: "investigation"
   .govuk-grid-row class="govuk-!-margin-bottom-3"
-    .govuk-grid-column-one-half
+    .govuk-grid-column-two-thirds
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
         fieldset.govuk-fieldset
-          legend.govuk-label
+          legend.govuk-fieldset__legend--m
             | Do you want to add your own reference number?
           .govuk-radios.govuk-radios--conditional data-module="radios"
             .govuk-radios__item
@@ -26,7 +26,7 @@
               = form.label :has_reference_number, "Yes", class: "govuk-label govuk-radios__label"
             #conditional-corrective-action.govuk-radios__conditional.govuk-radios__conditional--hidden
               = form.label :complainant_reference, "Existing reference number", class: "govuk-label"
-              = form.text_field :complainant_reference, class: "govuk-input"
+              = form.text_field :complainant_reference, class: "govuk-input govuk-input--width-10"
             .govuk-radios__item
               = form.radio_button :has_reference_number, "No", class: "govuk-radios__input",
                       "data-aria-controls": "conditional-no-corrective-action"

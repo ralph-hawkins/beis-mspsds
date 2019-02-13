@@ -5,27 +5,29 @@
     h1.govuk-heading-xl
       span.govuk-caption-xl Report an unsafe or non-compliant product
       | Has any corrective action been taken?
-= form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
-  = render "form_validation_display", errors: @investigation.errors
-  fieldset.govuk-fieldset
-    span.govuk-hint
-      | For example, you’ve asked the retailer to stop selling the product
-    .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+      = render "form_validation_display", errors: @investigation.errors
       fieldset.govuk-fieldset
-        .govuk-radios.govuk-radios--conditional data-module="radios"
-          .govuk-radios__item
-            = form.radio_button :previous_corrective_action, "Yes", class: "govuk-radios__input",
-                    "data-aria-controls": "conditional-corrective-action"
-            = form.label :previous_corrective_action, "Yes", class: "govuk-label govuk-radios__label"
-          #conditional-corrective-action.govuk-radios__conditional.govuk-radios__conditional--hidden
-            = form.label :previous_corrective_action_description, "What action has been taken?", class: "govuk-label"
-            = form.text_area :previous_corrective_action_description, class: "govuk-textarea", rows: 5
-          .govuk-radios__item
-            = form.radio_button :previous_corrective_action, "No", class: "govuk-radios__input",
-                    "data-aria-controls": "conditional-no-corrective-action"
-            = form.label :previous_corrective_action, "No", class: "govuk-label govuk-radios__label"
+        span.govuk-hint
+          | For example, you’ve asked the retailer to stop selling the product
+        .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
+          fieldset.govuk-fieldset
+            .govuk-radios.govuk-radios--conditional data-module="radios"
+              .govuk-radios__item
+                = form.radio_button :previous_corrective_action, "Yes", class: "govuk-radios__input",
+                        "data-aria-controls": "conditional-corrective-action"
+                = form.label :previous_corrective_action, "Yes", class: "govuk-label govuk-radios__label"
+              #conditional-corrective-action.govuk-radios__conditional.govuk-radios__conditional--hidden
+                = form.label :previous_corrective_action_description, "What action has been taken?", class: "govuk-label"
+                = form.text_area :previous_corrective_action_description, class: "govuk-textarea", rows: 5
+              .govuk-radios__item
+                = form.radio_button :previous_corrective_action, "No", class: "govuk-radios__input",
+                        "data-aria-controls": "conditional-no-corrective-action"
+                = form.label :previous_corrective_action, "No", class: "govuk-label govuk-radios__label"
 
-  .govuk-grid-row
-    .govuk-grid-column-two-thirds
-      = form.submit "Continue", class: "govuk-button"
+      .govuk-grid-row
+        .govuk-grid-column-two-thirds
+          = form.submit "Continue", class: "govuk-button"
 br
