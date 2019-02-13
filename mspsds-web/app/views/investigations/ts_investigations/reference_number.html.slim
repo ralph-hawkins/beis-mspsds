@@ -15,7 +15,7 @@
   = render "form_validation_display", errors: @investigation.errors, model_name: "investigation"
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .govuk-grid-column-one-half
-      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:complainant_reference].any?)]
+      .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors.any?)]
         fieldset.govuk-fieldset
           legend.govuk-label
             | Do you want to add your own reference number?

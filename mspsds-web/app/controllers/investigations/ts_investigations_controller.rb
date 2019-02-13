@@ -216,8 +216,6 @@ private
       params.require(:investigation).permit(
         :unsafe, :hazard, :hazard_type, :hazard_description, :non_compliant, :non_compliant_reason
       )
-    when :reference_number
-      params.require(:investigation).permit(:complainant_reference)
     when :unsafe
       params.require(:investigation).permit(:hazard_type, :hazard_description)
     when :non_compliant
@@ -226,6 +224,8 @@ private
       params.require(:investigation).permit(:previous_corrective_action, :previous_corrective_action_description)
     when :planned_corrective_action
       params.require(:investigation).permit(:planned_corrective_action, :planned_corrective_action_description)
+    when :reference_number
+      params.require(:investigation).permit(:has_reference_number, :complainant_reference)
     end
   end
 
@@ -422,6 +422,13 @@ private
       return false if @corrective_action.errors.any?
     when :test_results
       return false if @test.errors.any?
+    when :reference_number
+      if investigation_step_params[:has_reference_number].nil?
+        @investigation.errors.add(:base, "Please indicate whether you want to add your own reference number")
+      end
+      if investigation_step_params[:has_reference_number] == "Yes" && !investigation_step_params[:complainant_reference].present?
+        @investigation.errors.add(:existing_reference_number, "can't be blank")
+      end
     end
     @investigation.errors.empty? && @product.errors.empty?
   end
