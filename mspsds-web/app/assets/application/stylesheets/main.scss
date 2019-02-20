@@ -2,20 +2,21 @@
 
 @import "autocomplete";
 @import "banner";
+@import "block-link";
+@import "buttons";
+@import "case-card";
 @import "documents";
+@import "flashcard";
+@import "form";
+@import "hazard-type-picker";
 @import "images";
 @import "pagination";
+@import "prototype-styles";
+@import "search-box";
 @import "shared";
 @import "sortable_columns";
-@import "prototype-styles";
-@import "timeline";
-@import "form";
-@import "block-link";
 @import "summary_table";
-@import "case-card";
-@import "search-box";
-@import "hazard-type-picker";
-@import "flashcard";
+@import "timeline";
 
 * {
   box-sizing: border-box;
