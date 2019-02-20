@@ -24,8 +24,7 @@ class Investigation < ApplicationRecord
 
   validates_length_of :description, maximum: 1000
 
-
-  after_save :send_assignee_email, :create_audit_activity_for_assignee,
+  after_save :create_audit_activity_for_assignee,
              :create_audit_activity_for_status, :create_audit_activity_for_visibility
 
   # Elasticsearch index name must be declared in children and parent
@@ -63,14 +62,13 @@ class Investigation < ApplicationRecord
   has_one :source, as: :sourceable, dependent: :destroy
   has_one :complainant, dependent: :destroy
 
-  before_create :assign_current_user_to_case
+  before_create :assign_current_user_to_case, :add_pretty_id
 
   after_create :create_audit_activity_for_case
 
   def as_indexed_json(*)
     as_json(
-      methods: :pretty_id,
-      only: %i[user_title description hazard_type product_category is_closed assignable_id updated_at created_at],
+      only: %i[user_title description hazard_type product_category is_closed assignable_id updated_at created_at pretty_id],
       include: {
         documents: {
           only: [],
@@ -120,11 +118,6 @@ class Investigation < ApplicationRecord
 
   def pretty_visibility
     is_private ? ApplicationController.helpers.visibility_options[:private] : ApplicationController.helpers.visibility_options[:public]
-  end
-
-  def pretty_id
-    id_string = id.to_s.rjust(8, '0')
-    id_string.insert(4, "-")
   end
 
   def pretty_description
@@ -181,6 +174,13 @@ class Investigation < ApplicationRecord
 
   def case_type; end
 
+  def reason_created
+    return "Product reported because it is unsafe and non-compliant." if hazard_type && non_compliant_reason
+    return "Product reported because it is unsafe." if hazard_type
+
+    "Product reported because it is non-compliant." if non_compliant_reason
+  end
+
   def has_non_compliant_reason
     if non_compliant_reason&.empty?
       errors.add(:non_compliant_reason, "cannot be blank")
@@ -193,6 +193,15 @@ class Investigation < ApplicationRecord
     # InvestigationBusiness model.
     investigation_businesses.create!(business_id: business.id, relationship: relationship)
     create_audit_activity_for_business(business)
+  end
+
+  def to_param
+    pretty_id
+  end
+
+  def add_pretty_id
+    cases_before = Investigation.where("created_at < ? AND created_at > ?", created_at, created_at.beginning_of_month).count
+    self.pretty_id = "#{created_at.strftime('%y%m')}-%04d" % (cases_before + 1)
   end
 
 private
@@ -237,16 +246,6 @@ private
 
   def assign_current_user_to_case
     self.source = UserSource.new(user: current_user) if self.source.blank? && current_user.present?
-  end
-
-  def send_assignee_email
-    if saved_changes.key?(:assignable_id) && assignee.is_a?(User)
-      NotifyMailer.assigned_investigation(id, assignee.full_name, assignee.email).deliver_later
-    elsif saved_changes.key?(:assignable_id) && assignee.is_a?(Team)
-      assignee.users.each do |member|
-        NotifyMailer.assigned_investigation_to_team(id, member.full_name, member.email, assignee.name).deliver_later
-      end
-    end
   end
 end
 

@@ -8,8 +8,6 @@ class IntroductionsController < ApplicationController
   end
 
   def show
-    p "in here"
-    p step
     render_wizard
   end
 end
