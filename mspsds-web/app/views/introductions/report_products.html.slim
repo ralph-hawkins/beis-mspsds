@@ -1,10 +1,5 @@
-- content_for :after_header do
-  = render "skip_introduction"
-
-.flash-card
-  .govuk-grid-row
-    govuk-grid-column-two-thirds
-      h1.govuk-heading-l Track and manage investigations
-      p.govuk-body-l
-        | Market surveillance authorities (MSAs) can report and manage routine product safety cases and track their progress.
-      = link_to "Continue", next_wizard_path, class: "govuk-button", role: "button", draggable: false
+= render "flashcard_layout"
+  h1.govuk-heading-l Report unsafe and non-compliant products
+  p.govuk-body-l
+    | Trading Standards officers must use this service to report serious product safety incidents to The Office for Product Safety and Standards.
+  = link_to "Continue", next_wizard_path, class: "govuk-button", role: "button", draggable: false
