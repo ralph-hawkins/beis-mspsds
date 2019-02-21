@@ -11,13 +11,13 @@ class Investigations::TsInvestigationsController < ApplicationController
 
   steps :product, :why_reporting, :unsafe, :non_compliant, :which_businesses, :business, :previous_corrective_action, :planned_corrective_action,
         :other_information, :test_results, :risk_assessments, :product_images, :evidence_images, :other_files,
-        :reference_number, :confirmation
+        :reference_number, :escalation, :confirmation
   before_action :set_countries, only: %i[show create update]
   before_action :set_product, only: %i[show create update]
   before_action :store_product, only: %i[update], if: -> { step == :product }
   before_action :set_investigation, only: %i[show update]
   before_action :store_investigation, only: %i[update], if: -> { %i[why_reporting reference_number].include? step }
-  before_action :set_why_reporting, only: %i[show update], if: -> { %i[why_reporting :unsafe :non_compliant].include? step }
+  before_action :set_why_reporting, only: %i[show update], if: -> { %i[why_reporting unsafe non_compliant].include? step }
   before_action :store_why_reporting, only: %i[update], if: -> { step == :why_reporting }
   before_action :set_selected_businesses, only: %i[show update], if: -> { step == :which_businesses }
   before_action :store_selected_businesses, only: %i[update], if: -> { step == :which_businesses }
@@ -43,6 +43,8 @@ class Investigations::TsInvestigationsController < ApplicationController
   before_action :store_file, only: %i[update], if: -> do
     %i[risk_assessments product_images evidence_images other_files].include? step
   end
+  before_action :set_assignee, only: %i[show update], if: -> { %i[escalation confirmation].include? step }
+  before_action :store_assignee, only: %i[update], if: -> { step == :escalation }
 
 
   #GET /xxx/step
@@ -78,7 +80,7 @@ class Investigations::TsInvestigationsController < ApplicationController
       case step
       when :business, :corrective_action, *other_information_types
         return redirect_to wizard_path step
-      when :reference_number
+      when :escalation
         return create
       end
       redirect_to next_wizard_path
@@ -94,11 +96,11 @@ private
   end
 
   def set_investigation
-    if step == :confirmation
-      @investigation = Investigation.find_by(id: session[:investigation_id])
-    else
-      @investigation = Investigation.new(investigation_step_params.except(:unsafe, :non_compliant))
-    end
+    @investigation = if step == :confirmation
+                       Investigation.find_by(id: session[:investigation_id])
+                     else
+                       Investigation.new(investigation_step_params.except(:unsafe, :non_compliant))
+                     end
   end
 
   def set_why_reporting
@@ -170,6 +172,16 @@ private
     @file_description = get_attachment_metadata_params(:file)[:description]
   end
 
+  def set_assignee
+    return @assignee = session[:assignee] if !params[:investigation]
+
+    if escalation_params[:change_assignee] == "current_user"
+      @assignee = current_user
+    elsif escalation_params[:change_assignee] == "opss"
+      @assignee = Team.where(name: "OPSS Processing").first
+    end
+  end
+
   def clear_session
     session.delete :investigation
     session.delete :product
@@ -188,6 +200,7 @@ private
     session[:selected_businesses] = []
     session[:businesses] = []
     session.delete :investigation_id
+    session.delete :assignee
   end
 
   def store_investigation
@@ -226,6 +239,8 @@ private
       params.require(:investigation).permit(:planned_corrective_action, :planned_corrective_action_description)
     when :reference_number
       params.require(:investigation).permit(:has_reference_number, :complainant_reference)
+    when :escalation
+      escalation_params
     end
   end
 
@@ -280,6 +295,10 @@ private
 
   def other_information_types
     %i[test_results risk_assessments product_images evidence_images other_files]
+  end
+
+  def escalation_params
+    params.require(:investigation).permit(:change_assignee)
   end
 
   def store_selected_businesses
@@ -353,6 +372,10 @@ private
       end
       session.delete :file
     end
+  end
+
+  def store_assignee
+    session[:assignee] = @assignee
   end
 
   def file_valid?
@@ -434,7 +457,7 @@ private
       if investigation_step_params[:has_reference_number].nil?
         @investigation.errors.add(:base, "Please indicate whether you want to add your own reference number")
       end
-      if investigation_step_params[:has_reference_number] == "Yes" && !investigation_step_params[:complainant_reference].present?
+      if investigation_step_params[:has_reference_number] == "Yes" && investigation_step_params[:complainant_reference].blank?
         @investigation.errors.add(:existing_reference_number, "can't be blank")
       end
     end
@@ -452,6 +475,7 @@ private
 
     @product.save
     @investigation.products << @product
+    @investigation.assignee = @assignee
     @investigation.save
     session[:investigation_id] = @investigation.id
     save_businesses

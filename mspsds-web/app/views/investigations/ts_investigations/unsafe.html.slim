@@ -8,7 +8,7 @@
         span.govuk-caption-xl Report an unsafe or non-compliant product
         | Why is the product unsafe?
   .govuk-grid-row class="govuk-!-margin-bottom-3"
-    .mspsds-input.govuk-grid-column-two-thirds
+    .govuk-grid-column-two-thirds
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
         .govuk-grid-row#hazard-type-auto-complete-group-container
           = render "hazard_type_picker", select_id: "hazard-type-picker", select_key: :hazard_type, form: form, first: true
@@ -19,7 +19,7 @@
         .govuk-grid-column
           a.mspsds-block-link.add-hazard-link class=["govuk-!-font-size-19 govuk-!-margin-bottom-3"]
             | Add another hazard
-      / hr class=[“govuk-section-break govuk-section-break--m govuk-section-break--visible”]
+      hr.govuk-section-break.govuk-section-break--m.govuk-section-break--visible
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_description].any?)]
         = form.label :hazard_description, "Why do you think the product is unsafe?", class: "govuk-label",
                 for: ":investigation_hazard_description"

@@ -9,6 +9,7 @@ class Investigation < ApplicationRecord
   attr_accessor :previous_corrective_action
   attr_accessor :planned_corrective_action
   attr_accessor :has_reference_number
+  attr_accessor :change_assignee
 
   validates :user_title, presence: true, on: :enquiry_details
   validates :description, presence: true, on: %i[allegation_details enquiry_details]
