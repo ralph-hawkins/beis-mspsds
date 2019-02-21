@@ -1,14 +1,14 @@
 - content_for :page_title, "Report an unsafe or non-compliant product"
 
-.govuk-grid-row
-  .govuk-grid-column-two-thirds
-    h1.govuk-heading-xl
-      span.govuk-caption-xl Report an unsafe or non-compliant product
-      | Is more corrective action planned?
-.govuk-grid-row
-  .govuk-grid-column-two-thirds
-    = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
-      = render "form_validation_display", errors: @investigation.errors
+= form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
+  = render "form_components/govuk_error_summary", form: form
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      h1.govuk-heading-xl
+        span.govuk-caption-xl Report an unsafe or non-compliant product
+        | Is more corrective action planned?
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
       fieldset.govuk-fieldset
         .govuk-form-group class=("govuk-form-group--error" if @investigation.errors[:planned_corrective_action].any?)
           fieldset.govuk-fieldset

@@ -1,11 +1,12 @@
 - content_for :page_title, "Why is the product unsafe"
-.govuk-grid-row
-  .govuk-grid-column-two-thirds
-    h1.govuk-heading-xl
-      span.govuk-caption-xl Report an unsafe or non-compliant product
-      | Why is the product unsafe?
+
 = form_with model: @investigation, url: wizard_path, method: :put, local: true do |form|
-  = render "form_validation_display", errors: @investigation.errors
+  = render "form_components/govuk_error_summary", form: form
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      h1.govuk-heading-xl
+        span.govuk-caption-xl Report an unsafe or non-compliant product
+        | Why is the product unsafe?
   .govuk-grid-row class="govuk-!-margin-bottom-3"
     .mspsds-input.govuk-grid-column-two-thirds
       .govuk-form-group class=[("govuk-form-group--error" if @investigation.errors[:hazard_type].any?)]
