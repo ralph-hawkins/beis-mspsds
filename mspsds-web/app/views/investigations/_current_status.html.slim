@@ -15,13 +15,20 @@
         th.govuk-table__header[scope="row"]
           span.govuk-caption-m[class="govuk-!-font-size-16"]
             | Assigned to
-          = investigation.assignee ? investigation.assignee.full_name.to_s : "Unassigned"
-          - if investigation.assignee&.organisation.present?
-            div[class="govuk-!-font-size-16"]
-              = investigation.assignee.organisation.name
-        td.govuk-table__cell [class="govuk-!-font-size-16"]
-          - if policy(investigation).assign?
-            = link_to "Change", assign_investigation_path(investigation)
+          - assignee = investigation.assignee
+          - if assignee
+            - if assignee.is_a? Team
+              = assignee.name
+            - if assignee.is_a? User
+              = assignee.full_name.to_s
+              - if assignee&.organisation.present?
+                div[class="govuk-!-font-size-16"]
+                  = assignee.organisation.name
+          - else
+            = "Unassigned"
+          td.govuk-table__cell [class="govuk-!-font-size-16"]
+            - if policy(investigation).assign?
+              = link_to "Change", assign_investigation_path(investigation)
       tr.govuk-table__row
         th.govuk-table__header[scope="row"]
           span.govuk-caption-m[class="govuk-!-font-size-16"]
