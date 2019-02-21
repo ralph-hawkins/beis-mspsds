@@ -298,6 +298,8 @@ private
   end
 
   def escalation_params
+    return {} if params[:investigation].blank?
+
     params.require(:investigation).permit(:change_assignee)
   end
 
@@ -459,6 +461,10 @@ private
       end
       if investigation_step_params[:has_reference_number] == "Yes" && investigation_step_params[:complainant_reference].blank?
         @investigation.errors.add(:existing_reference_number, "can't be blank")
+      end
+    when :escalation
+      if escalation_params[:change_assignee].blank?
+        @investigation.errors.add(:change_assignee, "Please indicate whether you want to escalate the issue")
       end
     end
     @investigation.errors.empty? && @product.errors.empty?
